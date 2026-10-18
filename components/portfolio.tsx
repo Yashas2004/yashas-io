@@ -15,6 +15,8 @@ import {
   Sparkles,
   Terminal,
   X,
+  Send,
+  Bot,
 } from 'lucide-react'
 
 const projects = [
@@ -45,16 +47,38 @@ const projects = [
 ]
 
 const stack = [
-  ['01', 'React / Next.js'],
-  ['02', 'TypeScript'],
-  ['03', 'Node / PostgreSQL'],
-  ['04', 'Motion / WebGL'],
-  ['05', 'Product Design'],
+  ['01', 'React / Next.js', 'https://cdn.simpleicons.org/nextdotjs/f2f0eb'],
+  ['02', 'TypeScript', 'https://cdn.simpleicons.org/typescript/3178C6'],
+  ['03', 'Node / PostgreSQL', 'https://cdn.simpleicons.org/nodedotjs/5FA04E'],
+  ['04', 'Motion / WebGL', 'https://cdn.simpleicons.org/threedotjs/f2f0eb'],
+  ['05', 'Product Design', 'https://cdn.simpleicons.org/figma/F24E1E'],
 ]
 
 export function Portfolio() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [copied, setCopied] = useState(false)
+  const [assistantOpen, setAssistantOpen] = useState(false)
+  const [assistantInput, setAssistantInput] = useState('')
+  const [assistantLoading, setAssistantLoading] = useState(false)
+  const [assistantMessages, setAssistantMessages] = useState([{ role: 'assistant', content: 'Hi, I’m Alex’s portfolio assistant. Ask me about Alex, the work, or how we could collaborate.' }])
+
+  const askAssistant = async () => {
+    const content = assistantInput.trim()
+    if (!content || assistantLoading) return
+    const nextMessages = [...assistantMessages, { role: 'user', content }]
+    setAssistantMessages(nextMessages)
+    setAssistantInput('')
+    setAssistantLoading(true)
+    try {
+      const response = await fetch('/api/assistant', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ messages: nextMessages }) })
+      const data = await response.json()
+      setAssistantMessages([...nextMessages, { role: 'assistant', content: data.text || data.error }])
+    } catch {
+      setAssistantMessages([...nextMessages, { role: 'assistant', content: 'Please email Alex directly at hello@alexmorgan.dev.' }])
+    } finally {
+      setAssistantLoading(false)
+    }
+  }
 
   useEffect(() => {
     const reveal = new IntersectionObserver(
@@ -106,7 +130,7 @@ export function Portfolio() {
 
       <section className="stack section-pad reveal" aria-labelledby="stack-heading">
         <div className="section-label"><span>03</span><span>Toolkit / Stack</span></div>
-        <div className="stack-content"><h2 id="stack-heading">The tools I use<br /><span>to make it real.</span></h2><div className="stack-list">{stack.map(([num, name]) => <div className="stack-row" key={name}><span>{num}</span><strong>{name}</strong><ArrowUpRight /></div>)}</div></div>
+        <div className="stack-content"><h2 id="stack-heading">The tools I use<br /><span>to make it real.</span></h2><div className="stack-list">{stack.map(([num, name, icon]) => <div className="stack-row" key={name}><span>{num}</span><img className="stack-icon" src={icon} alt="" /><strong>{name}</strong><ArrowUpRight /></div>)}</div></div>
       </section>
 
       <section id="work" className="work section-pad reveal" aria-labelledby="work-heading">
@@ -115,7 +139,9 @@ export function Portfolio() {
         <div className="project-grid">{projects.map((project) => <article className={`project-card ${project.className}`} key={project.title}><a href="https://github.com" target="_blank" rel="noreferrer" className="project-image"><img src={project.image} alt="" /><span className="view-project">View <ArrowUpRight /></span></a><div className="project-meta"><span>{project.number}</span><div><h3>{project.title}</h3><p>{project.description}</p><div className="tag-list">{project.tags.map((tag) => <span key={tag}>{tag}</span>)}</div></div></div></article>)}</div>
       </section>
 
-      <section id="contact" className="contact section-pad reveal"><div className="contact-line" /><div className="contact-layout"><div><p className="eyebrow">Have a good one in mind?</p><h2>Let&apos;s make<br /><em>something</em> useful<span className="accent">.</span></h2></div><div className="contact-actions"><a className="primary-cta" href="mailto:hello@alexmorgan.dev">Start a conversation <ArrowUpRight /></a><button className="email-copy" onClick={copyEmail}>{copied ? <Check /> : <Copy />} {copied ? 'Copied to clipboard' : 'hello@alexmorgan.dev'}</button></div></div></section>
+      <section id="contact" className="contact section-pad reveal"><div className="contact-line" /><div className="contact-layout"><div><p className="eyebrow">Have a good one in mind?</p><h2>Let&apos;s make<br /><em>something</em> useful<span className="accent">.</span></h2></div><div className="contact-actions"><form className="contact-form" action="mailto:hello@alexmorgan.dev" method="post" encType="text/plain"><input name="name" placeholder="Your name" aria-label="Your name" required /><input type="email" name="email" placeholder="Your email" aria-label="Your email" required /><input name="subject" placeholder="Subject" aria-label="Subject" required /><textarea name="message" placeholder="Tell me about the project..." aria-label="Your message" rows={4} required /><button className="primary-cta" type="submit">Send message <Send /></button></form><button className="email-copy" onClick={copyEmail}>{copied ? <Check /> : <Copy />} {copied ? 'Copied to clipboard' : 'hello@alexmorgan.dev'}</button></div></div></section>
+
+      <aside className={`assistant-widget ${assistantOpen ? 'is-open' : ''}`} aria-label="Portfolio assistant"><button className="assistant-trigger" onClick={() => setAssistantOpen(!assistantOpen)} aria-expanded={assistantOpen}><Bot /><span>Ask about Alex</span></button>{assistantOpen && <div className="assistant-panel"><div className="assistant-panel-head"><div><strong>Alex&apos;s AI</strong><span>Portfolio guide</span></div><button onClick={() => setAssistantOpen(false)} aria-label="Close assistant"><X /></button></div><div className="assistant-messages">{assistantMessages.map((message, index) => <p className={message.role} key={`${message.role}-${index}`}>{message.content}</p>)}{assistantLoading && <p className="assistant-loading">Thinking<span>.</span><span>.</span><span>.</span></p>}</div><form className="assistant-input" onSubmit={(event) => { event.preventDefault(); askAssistant() }}><input value={assistantInput} onChange={(event) => setAssistantInput(event.target.value)} placeholder="Ask anything..." aria-label="Ask the portfolio assistant" /><button type="submit" aria-label="Send question"><Send /></button></form></div>}</aside>
 
       <footer className="site-footer"><div><Braces /> <span>Built with care / 2025</span></div><div className="footer-links"><a href="https://github.com" target="_blank" rel="noreferrer"><Code2 /> GitHub</a><a href="https://linkedin.com" target="_blank" rel="noreferrer"><Terminal /> LinkedIn</a><a href="mailto:hello@alexmorgan.dev"><Mail /> Email</a></div><span className="location"><MapPin /> Toronto, CA</span></footer>
     </main>
