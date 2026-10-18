@@ -25,7 +25,7 @@ export const experience: Role[] = [
     end: 'Present',
     current: true,
     location: 'Bangalore, India',
-    tech: ['TypeScript', 'PostgreSQL', 'Drizzle', 'Redis', 'JWT', 'GitHub Actions'],
+    tech: ['TypeScript', 'PostgreSQL', 'Neon', 'Redis', 'JWT', 'GitHub Actions'],
   },
   {
     company: 'Supr Mentr Technologies Pvt Ltd',

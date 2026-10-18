@@ -10,9 +10,9 @@ import { IntroLoader } from '@/components/intro-loader'
 const inter = Inter({ subsets: ['latin'], weight: '300', display: 'swap' })
 
 export const metadata: Metadata = {
-  title: 'Alex Morgan — Digital things with intent',
+  title: 'Yashas.io',
   description: 'Independent developer and creative technologist crafting thoughtful digital products and expressive interfaces.',
-  generator: 'v0.app',
+  generator: 'Yashas',
 }
 
 export const viewport: Viewport = {
