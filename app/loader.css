@@ -1,0 +1,119 @@
+/* ── Intro loader ("Going Live") ─────────────────────────────────────────── */
+
+#intro-loader {
+  position: fixed;
+  inset: 0;
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #0c0b0a;
+  opacity: 1;
+  transition: opacity 500ms ease;
+  /* Last-resort failsafe if no script runs at all (e.g. blocked by CSP): fade away on its own after 5s. */
+  animation: intro-failsafe 400ms ease 5s forwards;
+}
+@keyframes intro-failsafe { to { opacity: 0; visibility: hidden; pointer-events: none; } }
+
+#intro-loader .loader-wrapper { transition: transform 500ms ease; }
+#intro-loader.is-hiding, html.intro-timeout #intro-loader { opacity: 0; pointer-events: none; }
+#intro-loader.is-hiding .loader-wrapper, html.intro-timeout #intro-loader .loader-wrapper { transform: scale(1.08); }
+
+/* Already seen this session (set by the inline script before first paint): never show it. */
+html.intro-skip #intro-loader { display: none; }
+/* Lock page scroll while the loader is up. */
+html.intro-active, html.intro-active body { overflow: hidden; }
+
+.loader-wrapper {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 180px;
+  height: 180px;
+  font-family: "Inter", sans-serif;
+  font-size: 1.2em;
+  font-weight: 300;
+  color: white;
+  border-radius: 50%;
+  background-color: transparent;
+  user-select: none;
+}
+
+.loader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  border-radius: 50%;
+  background-color: transparent;
+  animation: loader-rotate 2s linear infinite;
+  z-index: 0;
+}
+
+@keyframes loader-rotate {
+  0% {
+    transform: rotate(90deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #ff9e3d inset,
+      0 60px 60px 0 #b8461b inset;
+  }
+  50% {
+    transform: rotate(270deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 10px 0 #5ef0ff inset,
+      0 40px 60px 0 #1f6f78 inset;
+  }
+  100% {
+    transform: rotate(450deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #ff9e3d inset,
+      0 60px 60px 0 #b8461b inset;
+  }
+}
+
+.loader-letter {
+  display: inline-block;
+  opacity: 0.4;
+  transform: translateY(0);
+  animation: loader-letter-anim 2s infinite;
+  z-index: 1;
+  border-radius: 50ch;
+  border: none;
+}
+
+.loader-letter:nth-child(1) { animation-delay: 0s; }
+.loader-letter:nth-child(2) { animation-delay: 0.1s; }
+.loader-letter:nth-child(3) { animation-delay: 0.2s; }
+.loader-letter:nth-child(4) { animation-delay: 0.3s; }
+.loader-letter:nth-child(5) { animation-delay: 0.4s; }
+.loader-letter:nth-child(6) { animation-delay: 0.5s; }
+.loader-letter:nth-child(7) { animation-delay: 0.6s; }
+.loader-letter:nth-child(8) { animation-delay: 0.7s; }
+.loader-letter:nth-child(9) { animation-delay: 0.8s; }
+.loader-letter:nth-child(10) { animation-delay: 0.9s; }
+
+@keyframes loader-letter-anim {
+  0%, 100% { opacity: 0.4; transform: translateY(0); }
+  20% { opacity: 1; transform: scale(1.15); }
+  40% { opacity: 0.7; transform: translateY(0); }
+}
+
+/* Reduced motion: a static glowing ring and plain text. Higher specificity + !important beats the
+   global reduced-motion rule in globals.css, which would otherwise freeze the ring at an odd frame. */
+@media (prefers-reduced-motion: reduce) {
+  #intro-loader .loader {
+    animation: none !important;
+    transform: rotate(90deg);
+    box-shadow:
+      0 10px 20px 0 #fff inset,
+      0 20px 30px 0 #ff9e3d inset,
+      0 60px 60px 0 #b8461b inset;
+  }
+  #intro-loader .loader-letter { animation: none !important; opacity: 0.9; transform: none; }
+  #intro-loader, #intro-loader .loader-wrapper { transition-duration: 200ms !important; }
+}
