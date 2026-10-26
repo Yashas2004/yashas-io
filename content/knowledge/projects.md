@@ -5,6 +5,7 @@ All code on GitHub: https://github.com/Yashas2004
 ## SnipIt — URL shortener with click analytics · Jul – Aug 2026
 - Repo: https://github.com/Yashas2004/URL-shortner
 - Short links with device, browser, OS and location analytics per click.
+- Also: Google OAuth alongside JWT email/password, server-side search, filtering and pagination; API hardened with Helmet, rate limiting, bcrypt and IDOR-safe ownership checks.
 - Tracking runs asynchronously off the redirect path, so it adds no latency to the redirect.
 - Tech: React, Express, MongoDB, JWT, Google OAuth.
 
@@ -12,7 +13,8 @@ All code on GitHub: https://github.com/Yashas2004
 - Repo: https://github.com/Yashas2004/CODEVAULT
 - FastAPI REST backend, JWT auth, PostgreSQL; ownership-scoped CRUD verified by cross-user security tests.
 - Redis cache versioning that invalidates all of a user's cached queries in O(1) on writes; cursor-based pagination instead of offset.
-- PostgreSQL full-text search (tsvector + GIN index + auto-update triggers) replacing ILIKE; sliding-window Redis rate limiting on auth endpoints.
+- PostgreSQL full-text search (tsvector + GIN index + auto-update triggers) replacing ILIKE; sliding-window Redis rate limiting on auth endpoints; idempotent writes.
+- Public sharing with cryptographically random slugs to block link enumeration; multi-stage Docker builds.
 - Dockerised; GitHub Actions CI runs the pytest suite (20/20 passing) on every push.
 - Tech: Python, FastAPI, React, PostgreSQL, Redis, Docker, GitHub Actions.
 

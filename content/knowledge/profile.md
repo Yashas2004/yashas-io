@@ -4,7 +4,7 @@
 - Coursework: DSA, OOP, DBMS, Operating Systems, Computer Networks, Machine Learning.
 - Focus: backend/full-stack engineering and applied AI (LLM agents, RAG, deep learning).
 - Status: open to full-time software engineering roles.
-- Résumé: downloadable from this site (/Yashas_R_Resume.pdf).
+- Résumé: downloadable from this site (/Yashas_SWE_RESUME.pdf).
 
 ## Contact
 - Email: yashas.r.2004.07@gmail.com (best way to reach him)

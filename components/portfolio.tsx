@@ -27,7 +27,8 @@ const ME = {
   firstName: 'Yashas',
   email: 'yashas.r.2004.07@gmail.com',
   location: 'Bangalore, IN',
-  resume: '/Yashas_R_Resume.pdf', // file lives in /public
+  resume: '/Yashas_SWE_RESUME.pdf', // file lives in /public
+  resumeFileName: 'Yashas_SWE[RESUME].pdf', // name visitors get on download
 }
 
 const LINKS = {
@@ -303,7 +304,7 @@ export function Portfolio() {
           {nav.map(([href, label]) => (
             <a key={href} href={href} onClick={() => setMenuOpen(false)}>{label}</a>
           ))}
-          <a className="nav-resume" href={ME.resume} download onClick={() => setMenuOpen(false)}>
+          <a className="nav-resume" href={ME.resume} download={ME.resumeFileName} onClick={() => setMenuOpen(false)}>
             Résumé <Download aria-hidden="true" />
           </a>
         </nav>
@@ -330,7 +331,7 @@ export function Portfolio() {
               ))}
             </div>
             <div className="hero-cta">
-              <a className="hero-resume" href={ME.resume} download>
+              <a className="hero-resume" href={ME.resume} download={ME.resumeFileName}>
                 <Download aria-hidden="true" />
                 <span>Download résumé</span>
               </a>
